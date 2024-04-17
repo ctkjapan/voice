@@ -12,24 +12,58 @@
     <div id="content"></div>
 
     <script>
-        //音声認識の準備
-        const speech = new webkitSpeechRecognition();
-        speech.lang = 'ja-JP';
-
-        //使用する変数を用意
+        // 使用する変数を用意
         const btn = document.getElementById('btn');
         const content = document.getElementById('content');
 
+        // 音声認識の準備
+        const speech = new webkitSpeechRecognition();
+        speech.lang = 'ja-JP';
+
+        speech.onresult = e => {
+            content.innerHTML += `<p>on result</p>`;
+
+            for (var i = e.resultIndex; i < e.results.length; i++) {
+                if (!e.results[i].isFinal) continue;
+
+                const { transcript } = e.results[i][0];
+
+                content.innerHTML += `<p>Recognised: ${transcript}</p>`;
+            }
+
+            speech.stop();
+        }
+
+        speech.onstart = () => {
+            content.innerHTML += `<p>on start</p>`;
+        }
+        speech.onend = () => {
+            content.innerHTML += `<p>on end</p>`;
+        }
+
+        speech.onspeechstart = () => {
+            content.innerHTML += `<p>on speech start</p>`;
+        }
+        speech.onspeechend = () => {
+            content.innerHTML += `<p>on speech end</p>`;
+        }
+
+        speech.onosundstart = () => {
+            content.innerHTML += `<p>on sound start</p>`;
+        }
+        speech.onsoundend = () => {
+            content.innerHTML += `<p>on sound end</p>`;
+        }
+
+        speech.onaudiostart = () => {
+            content.innerHTML += `<p>on audio start</p>`;
+        }
+        speech.onaudioend = () => {
+            content.innerHTML += `<p>on audio end</p>`;
+        }
 
         btn.addEventListener('click', function () {
-            // 音声認識をスタート
             speech.start();
-        });
-
-
-        speech.addEventListener('result', function (e) {
-            // 音声認識で取得した情報を、コンソール画面に表示
-            console.log(e);
         });
     </script>
 </body>
