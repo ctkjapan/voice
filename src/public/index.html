@@ -1,71 +1,64 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 
 <head>
     <meta charset="UTF-8">
-    <title>音声認識サンプル</title>
+    <title>Web Speech API</title>
+    <script>
+        var flag_speech = 0;
+
+        function vr_function() {
+            window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+            var recognition = new webkitSpeechRecognition();
+            recognition.lang = 'ja';
+            recognition.interimResults = true;
+            recognition.continuous = true;
+
+            recognition.onsoundstart = function () {
+                document.getElementById('status').innerHTML = '認識中';
+            };
+            recognition.onnomatch = function () {
+                document.getElementById('status').innerHTML = 'もう一度試してください';
+            };
+            recognition.onerror = function () {
+                document.getElementById('status').innerHTML = 'エラー';
+                if (flag_speech == 0)
+                    vr_function();
+            };
+            recognition.onsoundend = function () {
+                document.getElementById('status').innerHTML = '停止中';
+                vr_function();
+            };
+
+            recognition.onresult = function (event) {
+                var results = event.results;
+                for (var i = event.resultIndex; i < results.length; i++) {
+                    if (results[i].isFinal) {
+                        document.getElementById('result_text').innerHTML = results[i][0].transcript;
+                        vr_function();
+                    }
+                    else {
+                        document.getElementById('result_text').innerHTML = '[途中経過] ' + results[i][0].transcript;
+                        flag_speech = 1;
+                    }
+                }
+            }
+            flag_speech = 0;
+            document.getElementById('status').innerHTML = 'start';
+            recognition.start();
+        }
+    </script>
 </head>
 
 <body>
-    <h2>音声認識サンプル</h2>
-    <button id="btn">start</button>
-    <div id="content"></div>
-
-    <script>
-        // 使用する変数を用意
-        const btn = document.getElementById('btn');
-        const content = document.getElementById('content');
-
-        // 音声認識の準備
-        const speech = new webkitSpeechRecognition();
-        speech.lang = 'ja-JP';
-
-        speech.onresult = e => {
-            content.innerHTML += `<p>on result</p>`;
-
-            for (var i = e.resultIndex; i < e.results.length; i++) {
-                if (!e.results[i].isFinal) continue;
-
-                const { transcript } = e.results[i][0];
-
-                content.innerHTML += `<p>Recognised: ${transcript}</p>`;
-            }
-
-            // speech.stop();
-        }
-
-        speech.onstart = () => {
-            content.innerHTML += `<p>on start</p>`;
-        }
-        speech.onend = () => {
-            content.innerHTML += `<p>on end</p>`;
-        }
-
-        speech.onspeechstart = () => {
-            content.innerHTML += `<p>on speech start</p>`;
-        }
-        speech.onspeechend = () => {
-            content.innerHTML += `<p>on speech end</p>`;
-        }
-
-        speech.onosundstart = () => {
-            content.innerHTML += `<p>on sound start</p>`;
-        }
-        speech.onsoundend = () => {
-            content.innerHTML += `<p>on sound end</p>`;
-        }
-
-        speech.onaudiostart = () => {
-            content.innerHTML += `<p>on audio start</p>`;
-        }
-        speech.onaudioend = () => {
-            content.innerHTML += `<p>on audio end</p>`;
-        }
-
-        btn.addEventListener('click', function () {
-            speech.start();
-        });
-    </script>
+    <h1>v0</h1>
+    <textarea id="result_text" cols="100" rows="10">
+    </textarea>
+    <br>
+    <textarea id="status" cols="100" rows="1">
+    </textarea>
+    <br>
+    <input type="button" onClick="vr_function();" value="音認開始">
 </body>
 
 </html>
