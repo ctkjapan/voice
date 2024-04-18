@@ -36,6 +36,7 @@
                     if (results[i].isFinal) {
                         document.getElementById('result_text').innerHTML = results[i][0].transcript;
                         vr_function();
+                        document.getElementById('result_text').innerHTML = '<p>' + results[i][0].transcript + </p>;
                     }
                     else {
                         document.getElementById('result_text').innerHTML = '[途中経過] ' + results[i][0].transcript;
@@ -52,13 +53,16 @@
 
 <body>
     <h1>v0</h1>
-    <textarea id="result_text" cols="100" rows="10">
-    </textarea>
-    <br>
-    <textarea id="status" cols="100" rows="1">
-    </textarea>
-    <br>
-    <input type="button" onClick="vr_function();" value="音認開始">
+    <div>
+        <textarea id="result_text" cols="100" rows="5"></textarea>
+    </div>
+    <div id="result_text_all"></div>
+    <div>
+        <textarea id="status" cols="100" rows="1"></textarea>
+    </div>
+    <div>
+        <input type="button" onClick="vr_function();" value="音認開始">
+    </div>
 </body>
 
 </html>
