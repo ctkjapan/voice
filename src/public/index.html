@@ -4,6 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Web Speech API</title>
+    <style>
+        #result_text_all {
+            height: 10rem;
+            padding: 1rem;
+            overflow-y: auto;
+            border: solid 1px #ccc;
+            border-radius: .5rem;
+        }
+    </style>
     <script>
         var flag_speech = 0;
 
@@ -36,7 +45,7 @@
                     if (results[i].isFinal) {
                         document.getElementById('result_text').innerHTML = results[i][0].transcript;
                         vr_function();
-                        document.getElementById('result_text_all').innerHTML = '<p>' + results[i][0].transcript + '</p >';
+                        document.getElementById('result_text_all').innerHTML += '<p>' + results[i][0].transcript + '</p >';
                     }
                     else {
                         document.getElementById('result_text').innerHTML = '[途中経過] ' + results[i][0].transcript;
@@ -52,14 +61,10 @@
 </head>
 
 <body>
-    <h1>v0.02</h1>
-    <div>
-        <textarea id="result_text" cols="100" rows="5"></textarea>
-    </div>
+    <h1>v0.03</h1>
     <div id="result_text_all"></div>
-    <div>
-        <textarea id="status" cols="100" rows="1"></textarea>
-    </div>
+    <div id="result_text"></div>
+    <div id="status"></div>
     <div>
         <input type="button" onClick="vr_function();" value="音認開始">
     </div>
